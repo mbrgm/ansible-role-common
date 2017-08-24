@@ -1,0 +1,36 @@
+---
+- include_vars: "{{ env }}.yml"
+
+- name: fix_digitalocean_hosts
+  lineinfile:
+    dest: /etc/hosts
+    state: absent
+    regexp: "^127.0.1.1"
+
+- name: set_hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: add_fqdn_to_hosts
+  lineinfile:
+    dest: /etc/hosts
+    regexp: "^{{ ipv4 }}"
+    line: "{{ ipv4 }} {{ fqdn }} {{ hostname }}"
+    state: present
+  when: ipv4 is defined
+
+- name: set_ps1
+  lineinfile:
+    dest: /etc/bash.bashrc
+    regexp: "^PS1="
+    line: >-
+      PS1='${debian_chroot:+($debian_chroot)}\[\e[1;31m\]\u\[\e[1;33m\]@\[\e[1;36m\]\h
+      \[\e[{{ prompt_color }}\][{{ env|upper }}]\[\e[0m\]
+      \[\e[1;33m\]\w \[\e[1;35m\]\$ \[\e[0m\]'
+    state: present
+
+- name: unset_root_specific_ps1
+  lineinfile:
+    dest: ~root/.bashrc
+    regexp: "^PS1="
+    state: absent
