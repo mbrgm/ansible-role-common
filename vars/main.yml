@@ -4,5 +4,5 @@ hostname: "{{ inventory_hostname_short }}"
 ipv4: "{{ ansible_default_ipv4.address }}"
 prompt_color:
   dev: 0;0m
-  stg: 0;33m
-  prd: 0;37;41m
+  stage: 0;33m
+  prod: 0;37;41m
