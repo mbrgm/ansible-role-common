@@ -9,6 +9,12 @@
   hostname:
     name: "{{ hostname }}"
 
+- name: set_mailname
+  copy:
+    dest: /etc/mailname
+    content: "{{ fqdn }}"
+    mode: 0644
+
 - name: add_fqdn_to_hosts
   lineinfile:
     dest: /etc/hosts
